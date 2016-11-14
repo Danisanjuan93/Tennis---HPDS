@@ -1,11 +1,12 @@
 package is.katas.tennis;
 
-import static org.junit.Assert.*;
-
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.Parameterized;
 import org.junit.runners.Parameterized.Parameters;
+
+import static org.hamcrest.CoreMatchers.is;
+import static org.junit.Assert.*;
 
 @RunWith(Parameterized.class)
 public class TennisGame_ {
@@ -65,13 +66,14 @@ public class TennisGame_ {
     }
 
     @Test
-    public void should_check_all_scores() {
-        TennisGame game = new BasicTennisGame("player1", "player2");
+    public void should_check_score() {
+        TennisGame game = new BasicTennisGame();
         for (int i1 = 0, i2= 0; i1 < this.player1Score || i2 < this.player2Score; i1++, i2++) {
             if (i1 < this.player1Score) game.wonPoint("player1");
             if (i2 < this.player2Score) game.wonPoint("player2");
         }
-        assertEquals(this.expectedScore, game.getScore());
+//        assertEquals(this.expectedScore, game.getScore());
+        assertThat(game.getScore(), is(expectedScore));
     }
 
 

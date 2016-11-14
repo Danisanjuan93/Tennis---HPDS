@@ -1,80 +1,77 @@
 package is.katas.tennis;
 
+import java.util.Objects;
+
 public class BasicTennisGame implements TennisGame {
 
     private int m_score1 = 0;
     private int m_score2 = 0;
-    private String player1;
-    private String player2;
 
-    public BasicTennisGame(String player1, String player2) {
-        this.player1 = player1;
-        this.player2 = player2;
+    public BasicTennisGame() {
     }
 
     public void wonPoint(String playerName) {
-        if (playerName == "player1")
+        if (Objects.equals(playerName, "player1"))
             m_score1 += 1;
         else
             m_score2 += 1;
     }
 
     public String getScore() {
-        String score = "";
-        int tempScore=0;
-        if (m_score1==m_score2)
-        {
-            switch (m_score1)
-            {
-                case 0:
-                    score = "Love-All";
-                    break;
-                case 1:
-                    score = "Fifteen-All";
-                    break;
-                case 2:
-                    score = "Thirty-All";
-                    break;
-                case 3:
-                    score = "Forty-All";
-                    break;
-                default:
-                    score = "Deuce";
-                    break;
+        if (m_score1==m_score2) return equalScore();
+        if (m_score1>=4 || m_score2>=4) return checkAdvantage(m_score1-m_score2);
+        return checkScore();
+    }
 
-            }
+    private String checkScore() {
+        return checkPlayerScore(m_score1) + "-" + checkPlayerScore(m_score2);
+    }
+
+
+    private String checkPlayerScore(int score) {
+        switch(score) {
+            case 0:
+                return "Love";
+            case 1:
+                return "Fifteen";
+            case 2:
+                return "Thirty";
+            default:
+                return "Forty";
         }
-        else if (m_score1>=4 || m_score2>=4)
-        {
-            int minusResult = m_score1-m_score2;
-            if (minusResult==1) score ="Advantage player1";
-            else if (minusResult ==-1) score ="Advantage player2";
-            else if (minusResult>=2) score = "Win for player1";
-            else score ="Win for player2";
+    }
+
+    private String checkAdvantage(int minusResult) {
+        switch (minusResult) {
+            case 1:
+                return "Advantage player1";
+            case -1:
+                return "Advantage player2";
+            default:
+                return checkWinner(minusResult);
         }
-        else
-        {
-            for (int i=1; i<3; i++)
-            {
-                if (i==1) tempScore = m_score1;
-                else { score+="-"; tempScore = m_score2;}
-                switch(tempScore)
-                {
-                    case 0:
-                        score+="Love";
-                        break;
-                    case 1:
-                        score+="Fifteen";
-                        break;
-                    case 2:
-                        score+="Thirty";
-                        break;
-                    case 3:
-                        score+="Forty";
-                        break;
-                }
-            }
+    }
+
+    private String checkWinner(int minusResult) {
+        if (minusResult >= 2) {
+            return "Win for player1";
+        }else{
+            return "Win for player2";
         }
-        return score;
+    }
+
+    private String equalScore() {
+        switch (m_score1) {
+            case 0:
+                return "Love-All";
+            case 1:
+                return "Fifteen-All";
+            case 2:
+                return "Thirty-All";
+            case 3:
+                return "Forty-All";
+            default:
+                return "Deuce";
+        }
     }
 }
